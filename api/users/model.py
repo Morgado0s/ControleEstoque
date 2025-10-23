@@ -257,10 +257,6 @@ def create_admin_user() -> Optional[User]:
     try:
         from roles.model import get_admin_role
         admin_role = get_admin_role()
-        if not admin_role:
-            from roles.model import ensure_default_roles_exist
-            ensure_default_roles_exist()
-            admin_role = get_admin_role()
 
         admin_data = {
             "name": "System Administrator",

@@ -5,8 +5,8 @@ from products.model import Product
 from entries.model import Entry
 from exits.model import Exit
 from users.model import User
-from gender.model import Gender, ensure_default_genders_exist
-from roles.model import Role, ensure_default_roles_exist
+from gender.model import Gender
+from roles.model import Role
 from flask import current_app
 from sqlalchemy import inspect
 
@@ -23,17 +23,6 @@ def create_tables():
 def insert_default_data():
     """Insert default data into database"""
     try:
-        # Ensure default genders exist
-        created_genders = ensure_default_genders_exist()
-        if created_genders:
-            current_app.logger.info(f"Created {len(created_genders)} default genders")
-
-        # Ensure default roles exist
-        from roles.model import ensure_default_roles_exist
-        created_roles = ensure_default_roles_exist()
-        if created_roles:
-            current_app.logger.info(f"Created {len(created_roles)} default roles")
-
         # Create admin user if doesn't exist
         from users.model import create_admin_user
         admin_user = create_admin_user()

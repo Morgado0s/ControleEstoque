@@ -80,18 +80,3 @@ def delete_gender(gender_id: str) -> Optional[Gender]:
         return gender
     return None
 
-def ensure_default_genders_exist():
-    """Ensure that default genders exist, creating them if necessary"""
-    default_genders = ['Male', 'Female', 'Other', 'Prefer not to say']
-    created_genders = []
-
-    for gender_name in default_genders:
-        gender = get_gender_by_name(gender_name)
-        if not gender:
-            try:
-                gender = create_gender({'name': gender_name})
-                created_genders.append(gender)
-            except Exception as e:
-                current_app.logger.error(f"Error creating gender {gender_name}: {str(e)}")
-
-    return created_genders

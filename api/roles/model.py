@@ -85,27 +85,6 @@ def delete_role(role_id: str) -> Optional[Role]:
         return role
     return None
 
-def ensure_default_roles_exist():
-    """Ensure that default roles exist, creating them if necessary"""
-    default_roles = [
-        {'name': 'Administrator', 'description': 'System administrator with full access'},
-        {'name': 'Manager', 'description': 'Warehouse manager with operational access'},
-        {'name': 'Employee', 'description': 'Regular employee with limited access'},
-        {'name': 'Operator', 'description': 'Operator with basic operational access'}
-    ]
-    created_roles = []
-
-    for role_data in default_roles:
-        role = get_role_by_name(role_data['name'])
-        if not role:
-            try:
-                role = create_role(role_data)
-                created_roles.append(role)
-            except Exception as e:
-                current_app.logger.error(f"Error creating role {role_data['name']}: {str(e)}")
-
-    return created_roles
-
 def get_admin_role() -> Optional[Role]:
     """Get the administrator role"""
     return get_role_by_name('Administrator')
