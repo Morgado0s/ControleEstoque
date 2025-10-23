@@ -1,13 +1,11 @@
 from flask import request, jsonify, Blueprint, current_app
-from users.model import User, create_user, get_user, update_user, delete_user, get_all_users, find_user_by_email, authenticate_user, create_admin_user
+from users.model import User, create_user, get_user, update_user, delete_user, get_all_users, find_user_by_email, authenticate_user
 import traceback
 
 blueprint = Blueprint('users', __name__)
 
-# Create
 @blueprint.route("/create", methods=["POST"])
 def create():
-    """Create a new user"""
     current_app.logger.info(f"User creation requested")
     data = request.get_json()
 
@@ -21,7 +19,6 @@ def create():
 
     try:
         user = create_user(data)
-        # Return safe serialization without password hash
         return jsonify({
             "data": user.serialize_safe(),
             "message": "User created successfully."
@@ -34,10 +31,8 @@ def create():
         current_app.logger.error(traceback.format_exc())
         return jsonify({"error": "Failed to create user due to an internal server error."}), 500
 
-# Read
 @blueprint.route("/read/<string:user_id>", methods=["GET"])
 def read(user_id):
-    """Get user by ID"""
     current_app.logger.info(f"User read requested: {user_id}")
 
     try:
@@ -53,10 +48,8 @@ def read(user_id):
         current_app.logger.error(f"Error retrieving user {user_id}: {str(e)}")
         return jsonify({"error": "Failed to retrieve user due to an internal server error."}), 500
 
-# Read All
 @blueprint.route("/read/all", methods=["GET"])
 def read_all():
-    """Get all active users"""
     current_app.logger.info(f"All users requested")
 
     try:
@@ -71,10 +64,8 @@ def read_all():
         current_app.logger.error(f"Error retrieving all users: {str(e)}")
         return jsonify({"error": "Failed to retrieve users due to an internal server error."}), 500
 
-# Update
 @blueprint.route("/update/<string:user_id>", methods=["PUT"])
 def update(user_id):
-    """Update an existing user"""
     current_app.logger.info(f"User update requested: {user_id}")
 
     data = request.get_json()
@@ -98,10 +89,8 @@ def update(user_id):
         current_app.logger.error(traceback.format_exc())
         return jsonify({"error": "Failed to update user due to an internal server error."}), 500
 
-# Delete
 @blueprint.route("/delete/<string:user_id>", methods=["DELETE"])
 def delete(user_id):
-    """Delete a user"""
     current_app.logger.info(f"User deletion requested: {user_id}")
 
     try:
@@ -117,10 +106,8 @@ def delete(user_id):
         current_app.logger.error(traceback.format_exc())
         return jsonify({"error": "Failed to delete user due to an internal server error."}), 500
 
-# Login
 @blueprint.route("/login", methods=["POST"])
 def login():
-    """User authentication endpoint"""
     current_app.logger.info("User login requested")
     data = request.get_json()
 
@@ -148,10 +135,8 @@ def login():
         current_app.logger.error(traceback.format_exc())
         return jsonify({"error": "Authentication failed due to an internal server error."}), 500
 
-# Get Current User Profile
 @blueprint.route("/me", methods=["GET"])
 def get_current_user():
-    """Get current user profile"""
     current_app.logger.info("Current user profile requested")
 
     try:
@@ -167,10 +152,8 @@ def get_current_user():
         current_app.logger.error(f"Error retrieving current user profile: {str(e)}")
         return jsonify({"error": "Failed to retrieve user profile due to an internal server error."}), 500
 
-# Change Password
 @blueprint.route("/change-password", methods=["POST"])
 def change_password():
-    """Change user password"""
     current_app.logger.info(f"Password change requested")
     data = request.get_json()
 
@@ -187,18 +170,15 @@ def change_password():
         if not user:
             return jsonify({"error": "User not found"}), 404
 
-        # Verify current password
         if not user.check_password(data["current_password"]):
             return jsonify({"error": "Current password is incorrect"}), 400
 
-        # Update password
         from users.model import hash_password
         user.password_hash = hash_password(data["new_password"])
         from datetime import datetime
         import pytz
         user.updated_at = datetime.now(pytz.timezone('America/Sao_Paulo'))
 
-        # Commit changes
         from utils.db.connection import db
         db.session.commit()
 

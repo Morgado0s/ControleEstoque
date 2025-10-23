@@ -21,7 +21,6 @@ class User(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now(pytz.timezone('America/Sao_Paulo')))
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now(pytz.timezone('America/Sao_Paulo')), onupdate=datetime.now(pytz.timezone('America/Sao_Paulo')))
 
-    # Relationships
     gender_rel = relationship('Gender', back_populates='users')
     role_rel = relationship('Role', back_populates='users')
 
@@ -43,7 +42,6 @@ class User(db.Model):
         }
 
     def serialize_safe(self):
-        """Serialize without sensitive information"""
         return {
             "id": self.id,
             "name": self.name,
@@ -58,14 +56,12 @@ class User(db.Model):
         }
 
     def check_password(self, password: str) -> bool:
-        """Check if provided password matches stored hash"""
         try:
             return bcrypt.checkpw(password.encode('utf-8'), self.password_hash.encode('utf-8'))
         except:
             return False
 
 def hash_password(password: str) -> str:
-    """Hash a password using bcrypt"""
     try:
         salt = bcrypt.gensalt()
         return bcrypt.hashpw(password.encode('utf-8'), salt).decode('utf-8')
@@ -74,14 +70,12 @@ def hash_password(password: str) -> str:
         raise ValueError("Error processing password")
 
 def validate_user_data(user_data: Dict, require_password: bool = True) -> Optional[str]:
-    """Validate user data"""
     if 'name' not in user_data or not user_data['name']:
         return "Name is required"
 
     if 'email' not in user_data or not user_data['email']:
         return "Email is required"
 
-    # Validate email format
     import re
     email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     if not re.match(email_pattern, user_data['email']):
@@ -90,7 +84,6 @@ def validate_user_data(user_data: Dict, require_password: bool = True) -> Option
     if 'role_id' not in user_data or not user_data['role_id']:
         return "Role ID is required"
 
-    # Validate password if required
     if require_password:
         if 'password' not in user_data or not user_data['password']:
             return "Password is required"
@@ -99,20 +92,17 @@ def validate_user_data(user_data: Dict, require_password: bool = True) -> Option
         if len(password) < 6:
             return "Password must be at least 6 characters long"
 
-    # Validate gender if provided
     if 'gender_id' in user_data and user_data['gender_id']:
         from gender.model import get_gender
         gender = get_gender(user_data['gender_id'])
         if not gender:
             return f"Invalid gender ID: {user_data['gender_id']}"
 
-    # Validate role
     from roles.model import get_role
     role = get_role(user_data['role_id'])
     if not role:
         return f"Invalid role ID: {user_data['role_id']}"
 
-    # Check if email already exists (for new users)
     if 'email' in user_data:
         existing_user = find_user_by_email(user_data['email'])
         if existing_user:
@@ -121,16 +111,13 @@ def validate_user_data(user_data: Dict, require_password: bool = True) -> Option
     return None
 
 def create_user(user_data: Dict) -> Optional[User]:
-    """Create a new user"""
     current_app.logger.info("Starting user creation")
 
-    # Validate data
     validation_error = validate_user_data(user_data, require_password=True)
     if validation_error:
         raise ValueError(validation_error)
 
     try:
-        # Hash password
         password_hash = hash_password(user_data["password"])
 
         new_user = User(
@@ -152,41 +139,33 @@ def create_user(user_data: Dict) -> Optional[User]:
         raise
 
 def get_user(user_id: str) -> Optional[User]:
-    """Get user by ID"""
     return User.query.get(user_id)
 
 def find_user_by_email(email: str) -> Optional[User]:
-    """Find user by email"""
     return User.query.filter_by(email=email).first()
 
 def get_all_users() -> List[User]:
-    """Get all active users"""
     return User.query.filter_by(active=True).all()
 
 def get_users_by_role(role_id: str) -> List[User]:
-    """Get all users with a specific role"""
     return User.query.filter_by(role_id=role_id, active=True).all()
 
 def update_user(user_id: str, user_data: Dict) -> Optional[User]:
-    """Update an existing user"""
     user = get_user(user_id)
     if not user:
         return None
 
-    # Store current email to check for uniqueness
     current_email = user.email
 
     try:
         if "name" in user_data:
             user.name = user_data["name"]
         if "email" in user_data and user_data["email"] != current_email:
-            # Validate new email format
             import re
             email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
             if not re.match(email_pattern, user_data["email"]):
                 raise ValueError("Invalid email format")
 
-            # Check if new email is already taken
             existing_user = find_user_by_email(user_data["email"])
             if existing_user:
                 raise ValueError("Email already registered")
@@ -198,7 +177,6 @@ def update_user(user_id: str, user_data: Dict) -> Optional[User]:
         if "role_id" in user_data:
             user.role_id = user_data["role_id"]
         if "password" in user_data and user_data["password"]:
-            # Validate new password
             if len(user_data["password"]) < 6:
                 raise ValueError("Password must be at least 6 characters long")
 
@@ -216,7 +194,6 @@ def update_user(user_id: str, user_data: Dict) -> Optional[User]:
         raise
 
 def delete_user(user_id: str) -> Optional[User]:
-    """Delete a user (logical deletion)"""
     user = get_user(user_id)
     if user:
         user.active = False
@@ -227,7 +204,6 @@ def delete_user(user_id: str) -> Optional[User]:
     return None
 
 def hard_delete_user(user_id: str) -> Optional[User]:
-    """Hard delete a user"""
     user = get_user(user_id)
     if user:
         db.session.delete(user)
@@ -237,7 +213,6 @@ def hard_delete_user(user_id: str) -> Optional[User]:
     return None
 
 def authenticate_user(email: str, password: str) -> Optional[User]:
-    """Authenticate user credentials"""
     user = find_user_by_email(email)
     if user and user.active and user.check_password(password):
         current_app.logger.info(f"User authenticated successfully: {user.email}")
@@ -246,29 +221,3 @@ def authenticate_user(email: str, password: str) -> Optional[User]:
         current_app.logger.warning(f"Authentication failed for email: {email}")
         return None
 
-def create_admin_user() -> Optional[User]:
-    """Create default admin user if it doesn't exist"""
-    admin_email = "admin@inventory.com"
-    existing_admin = find_user_by_email(admin_email)
-
-    if existing_admin:
-        return existing_admin
-
-    try:
-        from roles.model import get_admin_role
-        admin_role = get_admin_role()
-
-        admin_data = {
-            "name": "System Administrator",
-            "email": admin_email,
-            "password": "admin123",  # Should be changed on first login
-            "role_id": admin_role.id if admin_role else None,
-            "active": True
-        }
-
-        admin_user = create_user(admin_data)
-        current_app.logger.info("Default admin user created successfully")
-        return admin_user
-    except Exception as e:
-        current_app.logger.error(f"Error creating admin user: {str(e)}")
-        return None

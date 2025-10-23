@@ -4,10 +4,8 @@ import traceback
 
 blueprint = Blueprint('roles', __name__)
 
-# Create
 @blueprint.route("/create", methods=["POST"])
 def create():
-    """Create a new role"""
     current_app.logger.info(f"Role creation requested")
     data = request.get_json()
 
@@ -33,10 +31,8 @@ def create():
         current_app.logger.error(traceback.format_exc())
         return jsonify({"error": "Failed to create role due to an internal server error."}), 500
 
-# Read
 @blueprint.route("/read/<string:role_id>", methods=["GET"])
 def read(role_id):
-    """Get role by ID"""
     current_app.logger.info(f"Role read requested: {role_id}")
 
     try:
@@ -52,10 +48,8 @@ def read(role_id):
         current_app.logger.error(f"Error retrieving role {role_id}: {str(e)}")
         return jsonify({"error": "Failed to retrieve role due to an internal server error."}), 500
 
-# Read All
 @blueprint.route("/read/all", methods=["GET"])
 def read_all():
-    """Get all roles"""
     current_app.logger.info(f"All roles requested")
 
     try:
@@ -70,10 +64,8 @@ def read_all():
         current_app.logger.error(f"Error retrieving all roles: {str(e)}")
         return jsonify({"error": "Failed to retrieve roles due to an internal server error."}), 500
 
-# Update
 @blueprint.route("/update/<string:role_id>", methods=["PUT"])
 def update(role_id):
-    """Update an existing role"""
     current_app.logger.info(f"Role update requested: {role_id}")
 
     data = request.get_json()
@@ -97,10 +89,8 @@ def update(role_id):
         current_app.logger.error(traceback.format_exc())
         return jsonify({"error": "Failed to update role due to an internal server error."}), 500
 
-# Delete
 @blueprint.route("/delete/<string:role_id>", methods=["DELETE"])
 def delete(role_id):
-    """Delete a role"""
     current_app.logger.info(f"Role deletion requested: {role_id}")
 
     try:

@@ -12,7 +12,6 @@ class Gender(db.Model):
     name = db.Column(db.String(50), nullable=False, unique=True)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now(pytz.timezone('America/Sao_Paulo')))
 
-    # Relationships
     users = db.relationship('User', back_populates='gender_rel', lazy='dynamic')
 
     def __repr__(self):
@@ -26,7 +25,6 @@ class Gender(db.Model):
         }
 
 def create_gender(gender_data: Dict) -> Optional[Gender]:
-    """Create a new gender"""
     current_app.logger.info("Starting gender creation")
     try:
         new_gender = Gender(
@@ -43,19 +41,15 @@ def create_gender(gender_data: Dict) -> Optional[Gender]:
         raise
 
 def get_gender(gender_id: str) -> Optional[Gender]:
-    """Get gender by ID"""
     return Gender.query.get(gender_id)
 
 def get_gender_by_name(name: str) -> Optional[Gender]:
-    """Get gender by name"""
     return Gender.query.filter_by(name=name).first()
 
 def get_all_genders() -> List[Gender]:
-    """Get all genders"""
     return Gender.query.all()
 
 def update_gender(gender_id: str, gender_data: Dict) -> Optional[Gender]:
-    """Update an existing gender"""
     gender = get_gender(gender_id)
     if gender:
         if "name" in gender_data:
@@ -67,10 +61,8 @@ def update_gender(gender_id: str, gender_data: Dict) -> Optional[Gender]:
     return None
 
 def delete_gender(gender_id: str) -> Optional[Gender]:
-    """Delete a gender"""
     gender = get_gender(gender_id)
     if gender:
-        # Check if gender has users
         if gender.users.count() > 0:
             raise ValueError(f"Cannot delete gender '{gender.name}' because it has associated users")
 

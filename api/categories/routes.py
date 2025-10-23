@@ -4,10 +4,8 @@ import traceback
 
 blueprint = Blueprint('categories', __name__)
 
-# Create
 @blueprint.route("/create", methods=["POST"])
 def create():
-    """Create a new category"""
     current_app.logger.info(f"Category creation requested")
     data = request.get_json()
 
@@ -33,10 +31,8 @@ def create():
         current_app.logger.error(traceback.format_exc())
         return jsonify({"error": "Failed to create category due to an internal server error."}), 500
 
-# Read
 @blueprint.route("/read/<string:category_id>", methods=["GET"])
 def read(category_id):
-    """Get category by ID"""
     current_app.logger.info(f"Category read requested: {category_id}")
 
     try:
@@ -52,10 +48,8 @@ def read(category_id):
         current_app.logger.error(f"Error retrieving category {category_id}: {str(e)}")
         return jsonify({"error": "Failed to retrieve category due to an internal server error."}), 500
 
-# Read All
 @blueprint.route("/read/all", methods=["GET"])
 def read_all():
-    """Get all active categories"""
     current_app.logger.info("All categories requested")
 
     try:
@@ -70,10 +64,8 @@ def read_all():
         current_app.logger.error(f"Error retrieving all categories: {str(e)}")
         return jsonify({"error": "Failed to retrieve categories due to an internal server error."}), 500
 
-# Update
 @blueprint.route("/update/<string:category_id>", methods=["PUT"])
 def update(category_id):
-    """Update an existing category"""
     current_app.logger.info(f"Category update requested: {category_id}")
 
     data = request.get_json()
@@ -97,10 +89,8 @@ def update(category_id):
         current_app.logger.error(traceback.format_exc())
         return jsonify({"error": "Failed to update category due to an internal server error."}), 500
 
-# Delete
 @blueprint.route("/delete/<string:category_id>", methods=["DELETE"])
 def delete(category_id):
-    """Delete a category"""
     current_app.logger.info(f"Category deletion requested: {category_id}")
 
     try:

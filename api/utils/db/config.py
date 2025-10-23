@@ -5,11 +5,9 @@ import os
 load_dotenv()
 
 def database_uri():
-    """Generate database connection URI from environment variables"""
     required_vars = ["DB_HOST", "DB_PORT", "DB_DATABASE",
                      "DB_USER", "DB_PASSWORD"]
 
-    # Check if all required environment variables are defined
     for var in required_vars:
         if not os.getenv(var):
             raise ValueError(f"Missing required environment variable: {var}")

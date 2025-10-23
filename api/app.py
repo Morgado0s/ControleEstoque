@@ -7,10 +7,8 @@ from flask_cors import CORS
 from utils.db.create_tables import create_tables, insert_default_data
 import os
 
-# Initialize Flask application
 application = Flask(__name__)
 
-# CORS configuration for React frontend
 CORS(application, resources={
     r"/*": {
         "origins": [
@@ -23,25 +21,19 @@ CORS(application, resources={
     }
 })
 
-# Database configuration
 application.config["SQLALCHEMY_DATABASE_URI"] = database_uri()
 application.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-# Initialize database
 init_db(application)
 
-# Create database tables and insert default data
 with application.app_context():
     create_tables()
     insert_default_data()
 
-# Register blueprints
 register_blueprints(application)
 
-# Health check endpoint
 @application.route('/health', methods=['GET'])
 def health():
-    """Health check endpoint"""
     try:
         with application.app_context():
             db.session.execute(text('SELECT 1'))

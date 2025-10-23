@@ -17,9 +17,9 @@ interface ErrorResponse {
 }
 
 // Token management
-const TOKEN_KEY = 'inventory_jwt_token';
+const TOKEN_KEY = 'inventory_auth_token';
 
-// Get stored JWT token
+// Get stored authentication token
 const getStoredToken = (): string | null => {
   if (typeof window !== 'undefined') {
     return localStorage.getItem(TOKEN_KEY);
@@ -27,14 +27,14 @@ const getStoredToken = (): string | null => {
   return null;
 };
 
-// Store JWT token
+// Store authentication token
 const storeToken = (token: string): void => {
   if (typeof window !== 'undefined') {
     localStorage.setItem(TOKEN_KEY, token);
   }
 };
 
-// Clear JWT token
+// Clear authentication token
 const clearToken = (): void => {
   if (typeof window !== 'undefined') {
     localStorage.removeItem(TOKEN_KEY);

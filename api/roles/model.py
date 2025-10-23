@@ -13,7 +13,6 @@ class Role(db.Model):
     description = db.Column(db.Text, nullable=True)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now(pytz.timezone('America/Sao_Paulo')))
 
-    # Relationships
     users = db.relationship('User', back_populates='role_rel', lazy='dynamic')
 
     def __repr__(self):
@@ -28,7 +27,6 @@ class Role(db.Model):
         }
 
 def create_role(role_data: Dict) -> Optional[Role]:
-    """Create a new role"""
     current_app.logger.info("Starting role creation")
     try:
         new_role = Role(
@@ -46,19 +44,15 @@ def create_role(role_data: Dict) -> Optional[Role]:
         raise
 
 def get_role(role_id: str) -> Optional[Role]:
-    """Get role by ID"""
     return Role.query.get(role_id)
 
 def get_role_by_name(name: str) -> Optional[Role]:
-    """Get role by name"""
     return Role.query.filter_by(name=name).first()
 
 def get_all_roles() -> List[Role]:
-    """Get all roles"""
     return Role.query.all()
 
 def update_role(role_id: str, role_data: Dict) -> Optional[Role]:
-    """Update an existing role"""
     role = get_role(role_id)
     if role:
         if "name" in role_data:
@@ -72,10 +66,8 @@ def update_role(role_id: str, role_data: Dict) -> Optional[Role]:
     return None
 
 def delete_role(role_id: str) -> Optional[Role]:
-    """Delete a role"""
     role = get_role(role_id)
     if role:
-        # Check if role has users
         if role.users.count() > 0:
             raise ValueError(f"Cannot delete role '{role.name}' because it has associated users")
 
@@ -86,5 +78,4 @@ def delete_role(role_id: str) -> Optional[Role]:
     return None
 
 def get_admin_role() -> Optional[Role]:
-    """Get the administrator role"""
     return get_role_by_name('Administrator')

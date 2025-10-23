@@ -6,7 +6,6 @@ from typing import Dict, Optional, List
 from flask import current_app
 from sqlalchemy import ForeignKey, CheckConstraint
 from sqlalchemy.orm import relationship
-from utils.stock_calculator import get_product_current_stock, get_stock_status
 
 class Product(db.Model):
     __tablename__ = "products"
@@ -22,13 +21,11 @@ class Product(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now(pytz.timezone('America/Sao_Paulo')))
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now(pytz.timezone('America/Sao_Paulo')), onupdate=datetime.now(pytz.timezone('America/Sao_Paulo')))
 
-    # Relationships
     category_rel = relationship('Category', back_populates='products')
     warehouse_rel = relationship('Warehouse', back_populates='products')
     entries = relationship('Entry', back_populates='product_rel', lazy='dynamic', cascade='all, delete-orphan')
     exits = relationship('Exit', back_populates='product_rel', lazy='dynamic', cascade='all, delete-orphan')
 
-    # Constraints
     __table_args__ = (
         CheckConstraint('min_quantity >= 0', name='ck_min_quantity_positive'),
         CheckConstraint('unit_cost >= 0', name='ck_unit_cost_positive'),
@@ -60,7 +57,6 @@ class Product(db.Model):
 
     
 def validate_product_data(product_data: Dict) -> Optional[str]:
-    """Validate product data"""
     if 'name' not in product_data or not product_data['name']:
         return "Product name is required"
 
@@ -83,14 +79,12 @@ def validate_product_data(product_data: Dict) -> Optional[str]:
         except (ValueError, TypeError):
             return "Unit cost must be a valid number"
 
-    # Validate category if provided
     if 'category_id' in product_data and product_data['category_id']:
         from categories.model import get_category
         category = get_category(product_data['category_id'])
         if not category:
             return f"Invalid category ID: {product_data['category_id']}"
 
-    # Validate warehouse
     from warehouses.model import get_warehouse
     warehouse = get_warehouse(product_data['warehouse_id'])
     if not warehouse:
@@ -99,10 +93,8 @@ def validate_product_data(product_data: Dict) -> Optional[str]:
     return None
 
 def create_product(product_data: Dict) -> Optional[Product]:
-    """Create a new product"""
     current_app.logger.info("Starting product creation")
 
-    # Validate data
     validation_error = validate_product_data(product_data)
     if validation_error:
         raise ValueError(validation_error)
@@ -128,23 +120,18 @@ def create_product(product_data: Dict) -> Optional[Product]:
         raise
 
 def get_product(product_id: str) -> Optional[Product]:
-    """Get product by ID"""
     return Product.query.get(product_id)
 
 def get_all_products() -> List[Product]:
-    """Get all active products"""
     return Product.query.filter_by(active=True).all()
 
 def get_products_by_warehouse(warehouse_id: str) -> List[Product]:
-    """Get all products in a specific warehouse"""
     return Product.query.filter_by(warehouse_id=warehouse_id, active=True).all()
 
 def get_products_by_category(category_id: str) -> List[Product]:
-    """Get all products in a specific category"""
     return Product.query.filter_by(category_id=category_id, active=True).all()
 
 def get_low_stock_products() -> List[Product]:
-    """Get products with low stock (below minimum)"""
     products = Product.query.filter_by(active=True).all()
     low_stock = []
 
@@ -158,12 +145,10 @@ def get_low_stock_products() -> List[Product]:
     return low_stock
 
 def update_product(product_id: str, product_data: Dict) -> Optional[Product]:
-    """Update an existing product"""
     product = get_product(product_id)
     if not product:
         return None
 
-    # Validate new data
     validation_error = validate_product_data(product_data)
     if validation_error:
         raise ValueError(validation_error)
@@ -194,7 +179,6 @@ def update_product(product_id: str, product_data: Dict) -> Optional[Product]:
         raise
 
 def delete_product(product_id: str) -> Optional[Product]:
-    """Delete a product (logical deletion)"""
     product = get_product(product_id)
     if product:
         product.active = False
@@ -205,7 +189,6 @@ def delete_product(product_id: str) -> Optional[Product]:
     return None
 
 def hard_delete_product(product_id: str) -> Optional[Product]:
-    """Hard delete a product"""
     product = get_product(product_id)
     if product:
         db.session.delete(product)

@@ -18,10 +18,8 @@ class Entry(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now(pytz.timezone('America/Sao_Paulo')))
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now(pytz.timezone('America/Sao_Paulo')), onupdate=datetime.now(pytz.timezone('America/Sao_Paulo')))
 
-    # Relationships
     product_rel = relationship('Product', back_populates='entries')
 
-    # Constraints
     __table_args__ = (
         CheckConstraint('quantity > 0', name='ck_entry_quantity_positive'),
     )
@@ -42,7 +40,6 @@ class Entry(db.Model):
         }
 
 def validate_entry_data(entry_data: Dict) -> Optional[str]:
-    """Validate entry data"""
     if 'product_id' not in entry_data or not entry_data['product_id']:
         return "Product ID is required"
 
@@ -52,13 +49,11 @@ def validate_entry_data(entry_data: Dict) -> Optional[str]:
     if 'entry_date' not in entry_data:
         return "Entry date is required"
 
-    # Validate product exists
     from products.model import get_product
     product = get_product(entry_data['product_id'])
     if not product:
         return f"Invalid product ID: {entry_data['product_id']}"
 
-    # Validate quantity
     try:
         quantity = float(entry_data['quantity'])
         if quantity <= 0:
@@ -66,7 +61,6 @@ def validate_entry_data(entry_data: Dict) -> Optional[str]:
     except (ValueError, TypeError):
         return "Quantity must be a valid number"
 
-    # Validate date
     try:
         if isinstance(entry_data['entry_date'], str):
             entry_date = datetime.strptime(entry_data['entry_date'], '%Y-%m-%d').date()
@@ -80,10 +74,8 @@ def validate_entry_data(entry_data: Dict) -> Optional[str]:
     return None
 
 def create_entry(entry_data: Dict) -> Optional[Entry]:
-    """Create a new stock entry"""
     current_app.logger.info("Starting entry creation")
 
-    # Validate data
     validation_error = validate_entry_data(entry_data)
     if validation_error:
         raise ValueError(validation_error)
@@ -106,37 +98,30 @@ def create_entry(entry_data: Dict) -> Optional[Entry]:
         raise
 
 def get_entry(entry_id: str) -> Optional[Entry]:
-    """Get entry by ID"""
     return Entry.query.get(entry_id)
 
 def get_all_entries() -> List[Entry]:
-    """Get all entries"""
     return Entry.query.order_by(Entry.entry_date.desc()).all()
 
 def get_entries_by_product(product_id: str) -> List[Entry]:
-    """Get all entries for a specific product"""
     return Entry.query.filter_by(product_id=product_id).order_by(Entry.entry_date.desc()).all()
 
 def get_entries_by_date_range(start_date: date, end_date: date) -> List[Entry]:
-    """Get all entries within a date range"""
     return Entry.query.filter(
         Entry.entry_date >= start_date,
         Entry.entry_date <= end_date
     ).order_by(Entry.entry_date.desc()).all()
 
 def get_entries_by_warehouse(warehouse_id: str) -> List[Entry]:
-    """Get all entries for products in a specific warehouse"""
     return Entry.query.join(Product).filter(
         Product.warehouse_id == warehouse_id
     ).order_by(Entry.entry_date.desc()).all()
 
 def update_entry(entry_id: str, entry_data: Dict) -> Optional[Entry]:
-    """Update an existing entry"""
     entry = get_entry(entry_id)
     if not entry:
         return None
 
-    # Validate new data
     validation_error = validate_entry_data(entry_data)
     if validation_error:
         raise ValueError(validation_error)
@@ -161,7 +146,6 @@ def update_entry(entry_id: str, entry_data: Dict) -> Optional[Entry]:
         raise
 
 def delete_entry(entry_id: str) -> Optional[Entry]:
-    """Delete an entry"""
     entry = get_entry(entry_id)
     if entry:
         db.session.delete(entry)

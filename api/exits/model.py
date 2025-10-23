@@ -18,10 +18,8 @@ class Exit(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now(pytz.timezone('America/Sao_Paulo')))
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now(pytz.timezone('America/Sao_Paulo')), onupdate=datetime.now(pytz.timezone('America/Sao_Paulo')))
 
-    # Relationships
     product_rel = relationship('Product', back_populates='exits')
 
-    # Constraints
     __table_args__ = (
         CheckConstraint('quantity > 0', name='ck_exit_quantity_positive'),
     )
@@ -42,7 +40,6 @@ class Exit(db.Model):
         }
 
 def validate_exit_data(exit_data: Dict) -> Optional[str]:
-    """Validate exit data"""
     if 'product_id' not in exit_data or not exit_data['product_id']:
         return "Product ID is required"
 
@@ -52,13 +49,11 @@ def validate_exit_data(exit_data: Dict) -> Optional[str]:
     if 'exit_date' not in exit_data:
         return "Exit date is required"
 
-    # Validate product exists
     from products.model import get_product
     product = get_product(exit_data['product_id'])
     if not product:
         return f"Invalid product ID: {exit_data['product_id']}"
 
-    # Check if product has sufficient stock
     current_stock = product.get_current_stock() if product else 0
     try:
         quantity = float(exit_data['quantity'])
@@ -69,7 +64,6 @@ def validate_exit_data(exit_data: Dict) -> Optional[str]:
     except (ValueError, TypeError):
         return "Quantity must be a valid number"
 
-    # Validate date
     try:
         if isinstance(exit_data['exit_date'], str):
             exit_date = datetime.strptime(exit_data['exit_date'], '%Y-%m-%d').date()
@@ -83,10 +77,8 @@ def validate_exit_data(exit_data: Dict) -> Optional[str]:
     return None
 
 def create_exit(exit_data: Dict) -> Optional[Exit]:
-    """Create a new stock exit"""
     current_app.logger.info("Starting exit creation")
 
-    # Validate data
     validation_error = validate_exit_data(exit_data)
     if validation_error:
         raise ValueError(validation_error)
@@ -109,37 +101,30 @@ def create_exit(exit_data: Dict) -> Optional[Exit]:
         raise
 
 def get_exit(exit_id: str) -> Optional[Exit]:
-    """Get exit by ID"""
     return Exit.query.get(exit_id)
 
 def get_all_exits() -> List[Exit]:
-    """Get all exits"""
     return Exit.query.order_by(Exit.exit_date.desc()).all()
 
 def get_exits_by_product(product_id: str) -> List[Exit]:
-    """Get all exits for a specific product"""
     return Exit.query.filter_by(product_id=product_id).order_by(Exit.exit_date.desc()).all()
 
 def get_exits_by_date_range(start_date: date, end_date: date) -> List[Exit]:
-    """Get all exits within a date range"""
     return Exit.query.filter(
         Exit.exit_date >= start_date,
         Exit.exit_date <= end_date
     ).order_by(Exit.exit_date.desc()).all()
 
 def get_exits_by_warehouse(warehouse_id: str) -> List[Exit]:
-    """Get all exits for products in a specific warehouse"""
     return Exit.query.join(Product).filter(
         Product.warehouse_id == warehouse_id
     ).order_by(Exit.exit_date.desc()).all()
 
 def update_exit(exit_id: str, exit_data: Dict) -> Optional[Exit]:
-    """Update an existing exit"""
     exit_record = get_exit(exit_id)
     if not exit_record:
         return None
 
-    # Validate new data
     validation_error = validate_exit_data(exit_data)
     if validation_error:
         raise ValueError(validation_error)
@@ -164,7 +149,6 @@ def update_exit(exit_id: str, exit_data: Dict) -> Optional[Exit]:
         raise
 
 def delete_exit(exit_id: str) -> Optional[Exit]:
-    """Delete an exit"""
     exit_record = get_exit(exit_id)
     if exit_record:
         db.session.delete(exit_record)

@@ -15,7 +15,6 @@ class Warehouse(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now(pytz.timezone('America/Sao_Paulo')))
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now(pytz.timezone('America/Sao_Paulo')), onupdate=datetime.now(pytz.timezone('America/Sao_Paulo')))
 
-    # Relationships
     products = db.relationship('Product', back_populates='warehouse_rel', lazy='dynamic')
 
     def __repr__(self):
@@ -32,7 +31,6 @@ class Warehouse(db.Model):
         }
 
 def create_warehouse(warehouse_data: Dict) -> Optional[Warehouse]:
-    """Create a new warehouse"""
     current_app.logger.info("Starting warehouse creation")
     try:
         new_warehouse = Warehouse(
@@ -51,19 +49,15 @@ def create_warehouse(warehouse_data: Dict) -> Optional[Warehouse]:
         raise
 
 def get_warehouse(warehouse_id: str) -> Optional[Warehouse]:
-    """Get warehouse by ID"""
     return Warehouse.query.get(warehouse_id)
 
 def get_warehouse_by_name(name: str) -> Optional[Warehouse]:
-    """Get warehouse by name"""
     return Warehouse.query.filter_by(name=name).first()
 
 def get_all_warehouses() -> List[Warehouse]:
-    """Get all active warehouses"""
     return Warehouse.query.filter_by(active=True).all()
 
 def update_warehouse(warehouse_id: str, warehouse_data: Dict) -> Optional[Warehouse]:
-    """Update an existing warehouse"""
     warehouse = get_warehouse(warehouse_id)
     if warehouse:
         if "name" in warehouse_data:
@@ -80,10 +74,8 @@ def update_warehouse(warehouse_id: str, warehouse_data: Dict) -> Optional[Wareho
     return None
 
 def delete_warehouse(warehouse_id: str) -> Optional[Warehouse]:
-    """Delete a warehouse (logical deletion)"""
     warehouse = get_warehouse(warehouse_id)
     if warehouse:
-        # Check if warehouse has products
         if warehouse.products.count() > 0:
             raise ValueError(f"Cannot delete warehouse '{warehouse.name}' because it has associated products")
 
@@ -95,10 +87,8 @@ def delete_warehouse(warehouse_id: str) -> Optional[Warehouse]:
     return None
 
 def hard_delete_warehouse(warehouse_id: str) -> Optional[Warehouse]:
-    """Hard delete a warehouse"""
     warehouse = get_warehouse(warehouse_id)
     if warehouse:
-        # Check if warehouse has products
         if warehouse.products.count() > 0:
             raise ValueError(f"Cannot delete warehouse '{warehouse.name}' because it has associated products")
 

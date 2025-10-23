@@ -11,7 +11,6 @@ from flask import current_app
 from sqlalchemy import inspect
 
 def create_tables():
-    """Create all database tables"""
     try:
         db.create_all()
         current_app.logger.info("Database tables created successfully")
@@ -21,16 +20,7 @@ def create_tables():
         return False
 
 def insert_default_data():
-    """Insert default data into database"""
     try:
-        # Create admin user if doesn't exist
-        from users.model import create_admin_user
-        admin_user = create_admin_user()
-        if admin_user:
-            current_app.logger.info("Default admin user created or verified")
-        else:
-            current_app.logger.info("Admin user already exists")
-
         current_app.logger.info("Default data insertion completed")
         return True
     except Exception as e:
@@ -38,7 +28,6 @@ def insert_default_data():
         return False
 
 def check_tables_exist():
-    """Check if database tables already exist"""
     try:
         inspector = inspect(db.engine)
         existing_tables = inspector.get_table_names()
@@ -49,7 +38,6 @@ def check_tables_exist():
         return False
 
 def get_existing_tables():
-    """Get list of existing database tables"""
     try:
         inspector = inspect(db.engine)
         return inspector.get_table_names()

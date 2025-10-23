@@ -4,10 +4,8 @@ import traceback
 
 blueprint = Blueprint('gender', __name__)
 
-# Create
 @blueprint.route("/create", methods=["POST"])
 def create():
-    """Create a new gender"""
     current_app.logger.info(f"Gender creation requested")
     data = request.get_json()
 
@@ -33,10 +31,8 @@ def create():
         current_app.logger.error(traceback.format_exc())
         return jsonify({"error": "Failed to create gender due to an internal server error."}), 500
 
-# Read
 @blueprint.route("/read/<string:gender_id>", methods=["GET"])
 def read(gender_id):
-    """Get gender by ID"""
     current_app.logger.info(f"Gender read requested: {gender_id}")
 
     try:
@@ -52,10 +48,8 @@ def read(gender_id):
         current_app.logger.error(f"Error retrieving gender {gender_id}: {str(e)}")
         return jsonify({"error": "Failed to retrieve gender due to an internal server error."}), 500
 
-# Read All
 @blueprint.route("/read/all", methods=["GET"])
 def read_all():
-    """Get all genders"""
     current_app.logger.info(f"All genders requested")
 
     try:
@@ -70,10 +64,8 @@ def read_all():
         current_app.logger.error(f"Error retrieving all genders: {str(e)}")
         return jsonify({"error": "Failed to retrieve genders due to an internal server error."}), 500
 
-# Update
 @blueprint.route("/update/<string:gender_id>", methods=["PUT"])
 def update(gender_id):
-    """Update an existing gender"""
     current_app.logger.info(f"Gender update requested: {gender_id}")
 
     data = request.get_json()
@@ -97,10 +89,8 @@ def update(gender_id):
         current_app.logger.error(traceback.format_exc())
         return jsonify({"error": "Failed to update gender due to an internal server error."}), 500
 
-# Delete
 @blueprint.route("/delete/<string:gender_id>", methods=["DELETE"])
 def delete(gender_id):
-    """Delete a gender"""
     current_app.logger.info(f"Gender deletion requested: {gender_id}")
 
     try:

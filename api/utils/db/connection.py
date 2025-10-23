@@ -6,11 +6,9 @@ from flask import current_app
 db = SQLAlchemy()
 
 def init_db(app):
-    """Initialize database with Flask app"""
     db.init_app(app)
 
 def connect_to_db(app, max_retries=5, delay=5):
-    """Test database connection with retries"""
     for attempt in range(max_retries):
         try:
             with app.app_context():

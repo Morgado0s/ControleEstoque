@@ -15,7 +15,6 @@ class Category(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now(pytz.timezone('America/Sao_Paulo')))
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now(pytz.timezone('America/Sao_Paulo')), onupdate=datetime.now(pytz.timezone('America/Sao_Paulo')))
 
-    # Relationships
     products = db.relationship('Product', back_populates='category_rel', lazy='dynamic')
 
     def __repr__(self):
@@ -32,7 +31,6 @@ class Category(db.Model):
         }
 
 def create_category(category_data: Dict) -> Optional[Category]:
-    """Create a new category"""
     current_app.logger.info("Starting category creation")
     try:
         new_category = Category(
@@ -51,19 +49,15 @@ def create_category(category_data: Dict) -> Optional[Category]:
         raise
 
 def get_category(category_id: str) -> Optional[Category]:
-    """Get category by ID"""
     return Category.query.get(category_id)
 
 def get_category_by_name(name: str) -> Optional[Category]:
-    """Get category by name"""
     return Category.query.filter_by(name=name).first()
 
 def get_all_categories() -> List[Category]:
-    """Get all active categories"""
     return Category.query.filter_by(active=True).all()
 
 def update_category(category_id: str, category_data: Dict) -> Optional[Category]:
-    """Update an existing category"""
     category = get_category(category_id)
     if category:
         if "name" in category_data:
@@ -80,7 +74,6 @@ def update_category(category_id: str, category_data: Dict) -> Optional[Category]
     return None
 
 def delete_category(category_id: str) -> Optional[Category]:
-    """Delete a category (logical deletion)"""
     category = get_category(category_id)
     if category:
         category.active = False
@@ -91,7 +84,6 @@ def delete_category(category_id: str) -> Optional[Category]:
     return None
 
 def hard_delete_category(category_id: str) -> Optional[Category]:
-    """Hard delete a category"""
     category = get_category(category_id)
     if category:
         db.session.delete(category)

@@ -4,10 +4,8 @@ import traceback
 
 blueprint = Blueprint('products', __name__)
 
-# Create
 @blueprint.route("/create", methods=["POST"])
 def create():
-    """Create a new product"""
     current_app.logger.info(f"Product creation requested")
     data = request.get_json()
 
@@ -33,10 +31,8 @@ def create():
         current_app.logger.error(traceback.format_exc())
         return jsonify({"error": "Failed to create product due to an internal server error."}), 500
 
-# Read
 @blueprint.route("/read/<string:product_id>", methods=["GET"])
 def read(product_id):
-    """Get product by ID"""
     current_app.logger.info(f"Product read requested: {product_id}")
 
     try:
@@ -52,10 +48,8 @@ def read(product_id):
         current_app.logger.error(f"Error retrieving product {product_id}: {str(e)}")
         return jsonify({"error": "Failed to retrieve product due to an internal server error."}), 500
 
-# Read All
 @blueprint.route("/read/all", methods=["GET"])
 def read_all():
-    """Get all active products"""
     current_app.logger.info(f"All products requested")
 
     try:
@@ -70,10 +64,8 @@ def read_all():
         current_app.logger.error(f"Error retrieving all products: {str(e)}")
         return jsonify({"error": "Failed to retrieve products due to an internal server error."}), 500
 
-# Get Low Stock Products
 @blueprint.route("/read/low-stock", methods=["GET"])
 def read_low_stock():
-    """Get products with low stock"""
     current_app.logger.info(f"Low stock products requested")
 
     try:
@@ -88,10 +80,8 @@ def read_low_stock():
         current_app.logger.error(f"Error retrieving low stock products: {str(e)}")
         return jsonify({"error": "Failed to retrieve low stock products due to an internal server error."}), 500
 
-# Get Products by Warehouse
 @blueprint.route("/read/warehouse/<string:warehouse_id>", methods=["GET"])
 def read_by_warehouse(warehouse_id):
-    """Get products by warehouse"""
     current_app.logger.info(f"Products by warehouse requested: {warehouse_id}")
 
     try:
@@ -106,10 +96,8 @@ def read_by_warehouse(warehouse_id):
         current_app.logger.error(f"Error retrieving products by warehouse {warehouse_id}: {str(e)}")
         return jsonify({"error": "Failed to retrieve products by warehouse due to an internal server error."}), 500
 
-# Get Products by Category
 @blueprint.route("/read/category/<string:category_id>", methods=["GET"])
 def read_by_category(category_id):
-    """Get products by category"""
     current_app.logger.info(f"Products by category requested: {category_id}")
 
     try:
@@ -124,10 +112,8 @@ def read_by_category(category_id):
         current_app.logger.error(f"Error retrieving products by category {category_id}: {str(e)}")
         return jsonify({"error": "Failed to retrieve products by category due to an internal server error."}), 500
 
-# Update
 @blueprint.route("/update/<string:product_id>", methods=["PUT"])
 def update(product_id):
-    """Update an existing product"""
     current_app.logger.info(f"Product update requested: {product_id}")
 
     data = request.get_json()
@@ -151,10 +137,8 @@ def update(product_id):
         current_app.logger.error(traceback.format_exc())
         return jsonify({"error": "Failed to update product due to an internal server error."}), 500
 
-# Delete
 @blueprint.route("/delete/<string:product_id>", methods=["DELETE"])
 def delete(product_id):
-    """Delete a product"""
     current_app.logger.info(f"Product deletion requested: {product_id}")
 
     try:

@@ -5,10 +5,8 @@ import traceback
 
 blueprint = Blueprint('entries', __name__)
 
-# Create
 @blueprint.route("/create", methods=["POST"])
 def create():
-    """Create a new stock entry"""
     current_app.logger.info(f"Entry creation requested")
     data = request.get_json()
 
@@ -34,10 +32,8 @@ def create():
         current_app.logger.error(traceback.format_exc())
         return jsonify({"error": "Failed to create entry due to an internal server error."}), 500
 
-# Read
 @blueprint.route("/read/<string:entry_id>", methods=["GET"])
 def read(entry_id):
-    """Get entry by ID"""
     current_app.logger.info(f"Entry read requested: {entry_id}")
 
     try:
@@ -53,10 +49,8 @@ def read(entry_id):
         current_app.logger.error(f"Error retrieving entry {entry_id}: {str(e)}")
         return jsonify({"error": "Failed to retrieve entry due to an internal server error."}), 500
 
-# Read All
 @blueprint.route("/read/all", methods=["GET"])
 def read_all():
-    """Get all entries"""
     current_app.logger.info(f"All entries requested")
 
     try:
@@ -71,10 +65,8 @@ def read_all():
         current_app.logger.error(f"Error retrieving all entries: {str(e)}")
         return jsonify({"error": "Failed to retrieve entries due to an internal server error."}), 500
 
-# Get Entries by Product
 @blueprint.route("/read/product/<string:product_id>", methods=["GET"])
 def read_by_product(product_id):
-    """Get entries by product"""
     current_app.logger.info(f"Entries by product requested: {product_id}")
 
     try:
@@ -89,10 +81,8 @@ def read_by_product(product_id):
         current_app.logger.error(f"Error retrieving entries by product {product_id}: {str(e)}")
         return jsonify({"error": "Failed to retrieve entries by product due to an internal server error."}), 500
 
-# Get Entries by Date Range
 @blueprint.route("/read/date-range", methods=["POST"])
 def read_by_date_range():
-    """Get entries within a date range"""
     current_app.logger.info(f"Entries by date range requested")
     data = request.get_json()
 
@@ -116,10 +106,8 @@ def read_by_date_range():
         current_app.logger.error(f"Error retrieving entries by date range: {str(e)}")
         return jsonify({"error": "Failed to retrieve entries by date range due to an internal server error."}), 500
 
-# Get Entries by Warehouse
 @blueprint.route("/read/warehouse/<string:warehouse_id>", methods=["GET"])
 def read_by_warehouse(warehouse_id):
-    """Get entries by warehouse"""
     current_app.logger.info(f"Entries by warehouse requested: {warehouse_id}")
 
     try:
@@ -134,10 +122,8 @@ def read_by_warehouse(warehouse_id):
         current_app.logger.error(f"Error retrieving entries by warehouse {warehouse_id}: {str(e)}")
         return jsonify({"error": "Failed to retrieve entries by warehouse due to an internal server error."}), 500
 
-# Update
 @blueprint.route("/update/<string:entry_id>", methods=["PUT"])
 def update(entry_id):
-    """Update an existing entry"""
     current_app.logger.info(f"Entry update requested: {entry_id}")
 
     data = request.get_json()
@@ -161,10 +147,8 @@ def update(entry_id):
         current_app.logger.error(traceback.format_exc())
         return jsonify({"error": "Failed to update entry due to an internal server error."}), 500
 
-# Delete
 @blueprint.route("/delete/<string:entry_id>", methods=["DELETE"])
 def delete(entry_id):
-    """Delete an entry"""
     current_app.logger.info(f"Entry deletion requested: {entry_id}")
 
     try:

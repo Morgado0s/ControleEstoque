@@ -5,10 +5,8 @@ import traceback
 
 blueprint = Blueprint('exits', __name__)
 
-# Create
 @blueprint.route("/create", methods=["POST"])
 def create():
-    """Create a new stock exit"""
     current_app.logger.info(f"Exit creation requested")
     data = request.get_json()
 
@@ -34,10 +32,8 @@ def create():
         current_app.logger.error(traceback.format_exc())
         return jsonify({"error": "Failed to create exit due to an internal server error."}), 500
 
-# Read
 @blueprint.route("/read/<string:exit_id>", methods=["GET"])
 def read(exit_id):
-    """Get exit by ID"""
     current_app.logger.info(f"Exit read requested: {exit_id}")
 
     try:
@@ -53,10 +49,8 @@ def read(exit_id):
         current_app.logger.error(f"Error retrieving exit {exit_id}: {str(e)}")
         return jsonify({"error": "Failed to retrieve exit due to an internal server error."}), 500
 
-# Read All
 @blueprint.route("/read/all", methods=["GET"])
 def read_all():
-    """Get all exits"""
     current_app.logger.info(f"All exits requested")
 
     try:
@@ -71,10 +65,8 @@ def read_all():
         current_app.logger.error(f"Error retrieving all exits: {str(e)}")
         return jsonify({"error": "Failed to retrieve exits due to an internal server error."}), 500
 
-# Get Exits by Product
 @blueprint.route("/read/product/<string:product_id>", methods=["GET"])
 def read_by_product(product_id):
-    """Get exits by product"""
     current_app.logger.info(f"Exits by product requested: {product_id}")
 
     try:
@@ -89,10 +81,8 @@ def read_by_product(product_id):
         current_app.logger.error(f"Error retrieving exits by product {product_id}: {str(e)}")
         return jsonify({"error": "Failed to retrieve exits by product due to an internal server error."}), 500
 
-# Get Exits by Date Range
 @blueprint.route("/read/date-range", methods=["POST"])
 def read_by_date_range():
-    """Get exits within a date range"""
     current_app.logger.info(f"Exits by date range requested")
     data = request.get_json()
 
@@ -116,10 +106,8 @@ def read_by_date_range():
         current_app.logger.error(f"Error retrieving exits by date range: {str(e)}")
         return jsonify({"error": "Failed to retrieve exits by date range due to an internal server error."}), 500
 
-# Get Exits by Warehouse
 @blueprint.route("/read/warehouse/<string:warehouse_id>", methods=["GET"])
 def read_by_warehouse(warehouse_id):
-    """Get exits by warehouse"""
     current_app.logger.info(f"Exits by warehouse requested: {warehouse_id}")
 
     try:
@@ -134,10 +122,8 @@ def read_by_warehouse(warehouse_id):
         current_app.logger.error(f"Error retrieving exits by warehouse {warehouse_id}: {str(e)}")
         return jsonify({"error": "Failed to retrieve exits by warehouse due to an internal server error."}), 500
 
-# Update
 @blueprint.route("/update/<string:exit_id>", methods=["PUT"])
 def update(exit_id):
-    """Update an existing exit"""
     current_app.logger.info(f"Exit update requested: {exit_id}")
 
     data = request.get_json()
@@ -161,10 +147,8 @@ def update(exit_id):
         current_app.logger.error(traceback.format_exc())
         return jsonify({"error": "Failed to update exit due to an internal server error."}), 500
 
-# Delete
 @blueprint.route("/delete/<string:exit_id>", methods=["DELETE"])
 def delete(exit_id):
-    """Delete an exit"""
     current_app.logger.info(f"Exit deletion requested: {exit_id}")
 
     try:

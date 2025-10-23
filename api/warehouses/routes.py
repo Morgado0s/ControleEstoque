@@ -4,10 +4,8 @@ import traceback
 
 blueprint = Blueprint('warehouses', __name__)
 
-# Create
 @blueprint.route("/create", methods=["POST"])
 def create():
-    """Create a new warehouse"""
     current_app.logger.info(f"Warehouse creation requested")
     data = request.get_json()
     current_app.logger.info(f"Received data: {data}")
@@ -34,10 +32,8 @@ def create():
         current_app.logger.error(traceback.format_exc())
         return jsonify({"error": "Failed to create warehouse due to an internal server error."}), 500
 
-# Read
 @blueprint.route("/read/<string:warehouse_id>", methods=["GET"])
 def read(warehouse_id):
-    """Get warehouse by ID"""
     current_app.logger.info(f"Warehouse read requested: {warehouse_id}")
 
     try:
@@ -53,10 +49,8 @@ def read(warehouse_id):
         current_app.logger.error(f"Error retrieving warehouse {warehouse_id}: {str(e)}")
         return jsonify({"error": "Failed to retrieve warehouse due to an internal server error."}), 500
 
-# Read All
 @blueprint.route("/read/all", methods=["GET"])
 def read_all():
-    """Get all active warehouses"""
     current_app.logger.info(f"All warehouses requested")
 
     try:
@@ -71,10 +65,8 @@ def read_all():
         current_app.logger.error(f"Error retrieving all warehouses: {str(e)}")
         return jsonify({"error": "Failed to retrieve warehouses due to an internal server error."}), 500
 
-# Update
 @blueprint.route("/update/<string:warehouse_id>", methods=["PUT"])
 def update(warehouse_id):
-    """Update an existing warehouse"""
     current_app.logger.info(f"Warehouse update requested: {warehouse_id}")
 
     data = request.get_json()
@@ -98,10 +90,8 @@ def update(warehouse_id):
         current_app.logger.error(traceback.format_exc())
         return jsonify({"error": "Failed to update warehouse due to an internal server error."}), 500
 
-# Delete
 @blueprint.route("/delete/<string:warehouse_id>", methods=["DELETE"])
 def delete(warehouse_id):
-    """Delete a warehouse"""
     current_app.logger.info(f"Warehouse deletion requested: {warehouse_id}")
 
     try:

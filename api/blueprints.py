@@ -8,7 +8,6 @@ from gender.routes import blueprint as gender_blueprint
 from roles.routes import blueprint as roles_blueprint
 
 def register_blueprints(app):
-    """Register all blueprints with the Flask application"""
     app.register_blueprint(categories_blueprint, url_prefix='/categories')
     app.register_blueprint(warehouses_blueprint, url_prefix='/warehouses')
     app.register_blueprint(products_blueprint, url_prefix='/products')
