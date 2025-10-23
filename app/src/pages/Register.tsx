@@ -4,7 +4,6 @@ import { Eye, EyeOff, Mail, Lock, User, Briefcase, Package, CheckCircle2, Loader
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useAuth } from '@/contexts/AuthContext';
 import { fetchRegistrationOptions, validatePassword } from '@/services/userRegistration';
@@ -17,8 +16,7 @@ export default function Register() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(true);
-  const [acceptedTerms, setAcceptedTerms] = useState(false);
-
+  
   // API data state
   const [roles, setRoles] = useState<ApiRole[]>([]);
   const [genders, setGenders] = useState<ApiGender[]>([]);
@@ -55,7 +53,6 @@ export default function Register() {
     senha: '',
     confirmarSenha: '',
     cargo: '',
-    terms: '',
   });
 
   // Redirecionar se já estiver autenticado
@@ -157,11 +154,7 @@ export default function Register() {
     const isConfirmarSenhaValid = validateConfirmarSenha(formData.confirmarSenha);
     const isCargoValid = validateCargo(formData.cargo);
     
-    if (!acceptedTerms) {
-      setErrors((prev) => ({ ...prev, terms: 'Você deve aceitar os termos para continuar' }));
-      return;
-    }
-    
+        
     if (!isNomeValid || !isEmailValid || !isSenhaValid || !isConfirmarSenhaValid || !isCargoValid) {
       return;
     }
@@ -451,44 +444,12 @@ export default function Register() {
               </div>
             </div>
 
-            {/* Termos de Uso */}
-            <div className="space-y-2">
-              <div className="flex items-start space-x-2">
-                <Checkbox
-                  id="terms"
-                  checked={acceptedTerms}
-                  onCheckedChange={(checked) => {
-                    setAcceptedTerms(checked as boolean);
-                    if (checked) {
-                      setErrors((prev) => ({ ...prev, terms: '' }));
-                    }
-                  }}
-                  className="mt-1"
-                />
-                <Label
-                  htmlFor="terms"
-                  className="text-sm font-normal leading-relaxed cursor-pointer"
-                >
-                  Aceito os{' '}
-                  <Link to="/termos" className="text-primary hover:underline">
-                    termos de uso
-                  </Link>
-                  {' '}e{' '}
-                  <Link to="/privacidade" className="text-primary hover:underline">
-                    política de privacidade
-                  </Link>
-                </Label>
-              </div>
-              {errors.terms && (
-                <p className="text-sm text-destructive">{errors.terms}</p>
-              )}
-            </div>
-
+            
             {/* Botão de Cadastro */}
             <Button
               type="submit"
               className="w-full h-12 text-base"
-              disabled={isLoading || !acceptedTerms}
+              disabled={isLoading}
             >
               {isLoading ? 'Criando conta...' : 'Criar Conta'}
             </Button>
