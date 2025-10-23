@@ -9,7 +9,7 @@ services:
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "3305:3305"
+      - "${DB_PORT_EXTERNAL:-3306}:${DB_PORT_INTERNAL:-3306}"
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
@@ -31,16 +31,14 @@ services:
       - ./api:/app
     environment:
       DB_HOST: mysql
-      DB_PORT: 3305
+      DB_PORT: ${DB_PORT_INTERNAL:-3306}
       DB_DATABASE: ${DB_DATABASE}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
-      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
-      JWT_ACCESS_TOKEN_EXPIRES: ${JWT_ACCESS_TOKEN_EXPIRES}
-      FLASK_ENV: development
-      FLASK_DEBUG: 1
+      FLASK_ENV: ${FLASK_ENV:-development}
+      FLASK_DEBUG: ${FLASK_DEBUG:-1}
     ports:
-      - "5001:5000"
+      - "${API_PORT:-5001}:5000"
     depends_on:
       mysql:
         condition: service_healthy
@@ -60,7 +58,7 @@ services:
       dockerfile: Dockerfile.dev
     container_name: inventory_frontend
     ports:
-      - "3000:8080"
+      - "${FRONTEND_PORT:-3000}:${FRONTEND_INTERNAL_PORT:-8080}"
     volumes:
       - ./app:/app
       - /app/node_modules
