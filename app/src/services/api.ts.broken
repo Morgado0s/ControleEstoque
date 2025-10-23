@@ -1,0 +1,140 @@
+// Dynamic import for axios to avoid Vite resolution issues
+import axios from 'axios';
+
+// API Configuration
+const API_BASE_URL = 'http://localhost:5001/api';
+const API_TIMEOUT = 30000; // 30 seconds
+
+// Response interface for standard API responses
+interface ApiResponse<T = any> {
+  data: T;
+  message: string;
+}
+
+// Error response interface
+interface ErrorResponse {
+  error: string;
+}
+
+// Token management
+const TOKEN_KEY = 'inventory_jwt_token';
+
+// Get stored JWT token
+const getStoredToken = (): string | null => {
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem(TOKEN_KEY);
+  }
+  return null;
+};
+
+// Store JWT token
+const storeToken = (token: string): void => {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(TOKEN_KEY, token);
+  }
+};
+
+// Clear JWT token
+const clearToken = (): void => {
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem(TOKEN_KEY);
+  }
+};
+
+// Create axios instance
+const apiClient: AxiosInstance = axios.create({
+  baseURL: API_BASE_URL,
+  timeout: API_TIMEOUT,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Request interceptor - Add authentication token
+apiClient.interceptors.request.use(
+  (config) => {
+    const token = getStoredToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Response interceptor - Handle common responses and errors
+apiClient.interceptors.response.use(
+  (response: AxiosResponse<ApiResponse>) => {
+    // Return the data directly for convenience
+    return response.data;
+  },
+  (error) => {
+    const originalRequest = error.config;
+
+    // Handle token expiration
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      // Clear expired token
+      clearToken();
+
+      // You could redirect to login here or implement token refresh
+      // For now, just return the error
+      return Promise.reject(error);
+    }
+
+    // Handle network errors
+    if (!error.response) {
+      error.message = 'Não foi possível conectar ao servidor. Verifique sua conexão.';
+      return Promise.reject(error);
+    }
+
+    // Handle API error responses
+    const errorResponse = error.response.data as ErrorResponse;
+    if (errorResponse?.error) {
+      error.message = errorResponse.error;
+    }
+
+    return Promise.reject(error);
+  }
+);
+
+// Utility functions for common HTTP methods
+export const api = {
+  // GET requests
+  get: async <T>(url: string): Promise<ApiResponse<T>> => {
+    return await apiClient.get(url);
+  },
+
+  // POST requests
+  post: async <T>(url: string, data?: any): Promise<ApiResponse<T>> => {
+    return await apiClient.post(url, data);
+  },
+
+  // PUT requests
+  put: async <T>(url: string, data?: any): Promise<ApiResponse<T>> => {
+    return await apiClient.put(url, data);
+  },
+
+  // DELETE requests
+  delete: async <T>(url: string): Promise<ApiResponse<T>> => {
+    return await apiClient.delete(url);
+  },
+};
+
+// Export token management functions
+export const tokenManager = {
+  get: getStoredToken,
+  set: storeToken,
+  clear: clearToken,
+  getToken: () => getStoredToken(),
+  isAuthenticated: () => !!getStoredToken(),
+};
+
+// Export API client for custom requests
+export { apiClient };
+
+// Export types
+export type { ApiResponse, ErrorResponse };

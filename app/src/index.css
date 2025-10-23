@@ -1,0 +1,131 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 220 17% 97%;
+    --foreground: 220 13% 13%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 13% 13%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 13% 13%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 220 13% 13%;
+
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+
+    --accent: 217 91% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 217 91% 60%;
+
+    --radius: 0.5rem;
+
+    /* Status colors */
+    --status-critical: 0 84% 60%;
+    --status-warning: 43 96% 56%;
+    --status-success: 142 71% 45%;
+
+    /* Custom tokens */
+    --sidebar-background: 220 13% 13%;
+    --sidebar-foreground: 220 14% 96%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 17% 20%;
+    --sidebar-accent-foreground: 220 14% 96%;
+    --sidebar-border: 220 17% 20%;
+    --sidebar-ring: 217 91% 60%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(217 91% 70%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(220 17% 98%) 100%);
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(220 13% 13% / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(220 13% 13% / 0.1), 0 2px 4px -2px hsl(220 13% 13% / 0.1);
+    --shadow-lg: 0 10px 15px -3px hsl(220 13% 13% / 0.1), 0 4px 6px -4px hsl(220 13% 13% / 0.1);
+
+    /* Transitions */
+    --transition-base: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dark {
+    --background: 220 13% 9%;
+    --foreground: 220 14% 96%;
+
+    --card: 220 13% 13%;
+    --card-foreground: 220 14% 96%;
+
+    --popover: 220 13% 13%;
+    --popover-foreground: 220 14% 96%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 17% 20%;
+    --secondary-foreground: 220 14% 96%;
+
+    --muted: 220 17% 20%;
+    --muted-foreground: 220 9% 60%;
+
+    --accent: 217 91% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 17% 20%;
+    --input: 220 17% 20%;
+    --ring: 217 91% 60%;
+
+    --sidebar-background: 220 13% 9%;
+    --sidebar-foreground: 220 14% 96%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 17% 20%;
+    --sidebar-accent-foreground: 220 14% 96%;
+    --sidebar-border: 220 17% 20%;
+    --sidebar-ring: 217 91% 60%;
+
+    --gradient-card: linear-gradient(145deg, hsl(220 13% 13%) 0%, hsl(220 13% 15%) 100%);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Additional fix for Select component text visibility */
+@layer components {
+  [data-radix-select-item] {
+    color: hsl(var(--popover-foreground));
+  }
+
+  [data-radix-select-item]:hover,
+  [data-radix-select-item][data-highlighted] {
+    color: hsl(var(--accent-foreground));
+  }
+}

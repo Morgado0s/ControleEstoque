@@ -1,0 +1,12 @@
+python-dotenv
+flask
+flask-sqlalchemy
+flask-migrate
+flask-cors
+flask-jwt-extended
+pytz
+python-dateutil
+mysql-connector-python
+bcrypt
+sqlalchemy
+gunicorn

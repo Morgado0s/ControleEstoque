@@ -1,0 +1,79 @@
+services:
+  # MySQL Database Container
+  mysql:
+    image: mysql:8.0
+    container_name: inventory_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "3305:3305"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - inventory_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # API Backend Container
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile.dev
+    container_name: inventory_api
+    volumes:
+      - ./api:/app
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3305
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      JWT_ACCESS_TOKEN_EXPIRES: ${JWT_ACCESS_TOKEN_EXPIRES}
+      FLASK_ENV: development
+      FLASK_DEBUG: 1
+    ports:
+      - "5001:5000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - inventory_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Frontend Container
+  frontend:
+    build:
+      context: ./app
+      dockerfile: Dockerfile.dev
+    container_name: inventory_frontend
+    ports:
+      - "3000:8080"
+    volumes:
+      - ./app:/app
+      - /app/node_modules
+    depends_on:
+      - api
+    networks:
+      - inventory_network
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  inventory_network:
+    driver: bridge
