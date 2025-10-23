@@ -1,24 +1,24 @@
-# 📦 Inventory Control
+n# Inventory Control
 
 **Sistema Completo de Controle de Estoque Brasileiro**
 
 Uma aplicação full-stack para gerenciamento completo de estoque, desenvolvida com React + TypeScript no frontend e Flask + MySQL no backend.
 
-## 🚀 Visão Geral
+## Visão Geral
 
 O Inventory Control é um sistema robusto de gerenciamento de estoque projetado para pequenas e médias empresas brasileiras. Oferece controle completo sobre produtos, categorias, armazéns e movimentações, com interface intuitiva e funcionalidades avançadas.
 
-### ✨ Funcionalidades Principais
+### Funcionalidades Principais
 
-- **🏠 Dashboard**: Métricas em tempo real com visualização de dados
-- **📦 Gestão de Produtos**: CRUD completo com controle de estoque mínimo
-- **🏪 Gestão de Armazéns**: Localização física dos produtos
-- **🏷️ Gestão de Categorias**: Organização inteligente de produtos
-- **📊 Controle de Movimentações**: Registro detalhado de entradas e saídas
-- **👥 Gestão de Usuários**: Sistema de autenticação e perfis
-- **📈 Relatórios**: Análise de dados e métricas de negócio
+- **Dashboard**: Métricas em tempo real com visualização de dados
+- **Gestão de Produtos**: CRUD completo com controle de estoque mínimo
+- **Gestão de Armazéns**: Localização física dos produtos
+- **Gestão de Categorias**: Organização inteligente de produtos
+- **Controle de Movimentações**: Registro detalhado de entradas e saídas
+- **Gestão de Usuários**: Sistema de autenticação e perfis
+- **Relatórios**: Análise de dados e métricas de negócio
 
-## 🛠️ Stack Tecnológico
+## Stack Tecnológico
 
 ### Frontend
 - **React 18** + **TypeScript** - Interface moderna e type-safe
@@ -40,25 +40,24 @@ O Inventory Control é um sistema robusto de gerenciamento de estoque projetado 
 - **Docker** + **Docker Compose** - Containerização completa
 - **Gunicorn** - Servidor WSGI para produção
 
-## 📋 Pré-requisitos
+## Pré-requisitos
 
 - Docker e Docker Compose
 - Node.js 18+ (para desenvolvimento local)
 - Python 3.12+ (para desenvolvimento local)
 - MySQL 8.0+ (se não usar Docker)
 
-## 🚀 Início Rápido
+## Início Rápido
 
-### 1. Clone o Repositório
-```bash
-git clone https://github.com/Migguell/InventoryControl.git
-cd inventory-control
-```
+### 1. Download e Descompactação
+1. Faça o download do arquivo `.zip` do projeto
+2. Descompacte o arquivo em uma pasta de sua preferência
+3. Abra o terminal na pasta descompactada (ex: `cd ControleEstoque`)
 
 ### 2. Configurar Variáveis de Ambiente
 ```bash
-cp api/.env.example api/.env
-# Edite api/.env com suas configurações
+cp .env.example .env
+# Edite o arquivo .env com suas configurações personalizadas
 ```
 
 ### 3. Iniciar com Docker (Recomendado)
@@ -79,35 +78,35 @@ docker-compose logs -f
 - **Email**: admin@inventory.com
 - **Senha**: admin123
 
-## 📁 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```
-inventory-control/
-├── 📂 api/                     # Backend Flask
-│   ├── 📂 entries/             # Movimentações de entrada
-│   ├── 📂 exits/              # Movimentações de saída
-│   ├── 📂 products/           # Gestão de produtos
-│   ├── 📂 warehouses/         # Gestão de armazéns
-│   ├── 📂 categories/         # Gestão de categorias
-│   ├── 📂 users/              # Gestão de usuários
-│   ├── 📂 utils/              # Utilitários do backend
+ControleEstoque/
+├── api/                     # Backend Flask
+│   ├── entries/             # Movimentações de entrada
+│   ├── exits/              # Movimentações de saída
+│   ├── products/           # Gestão de produtos
+│   ├── warehouses/         # Gestão de armazéns
+│   ├── categories/         # Gestão de categorias
+│   ├── users/              # Gestão de usuários
+│   ├── utils/              # Utilitários do backend
 │   └── app.py                 # Aplicação Flask principal
-├── 📂 app/                    # Frontend React
-│   ├── 📂 src/
-│   │   ├── 📂 components/      # Componentes reutilizáveis
-│   │   ├── 📂 contexts/        # Contextos React
-│   │   ├── 📂 hooks/           # Hooks personalizados
-│   │   ├── 📂 lib/             # Utilitários do frontend
-│   │   ├── 📂 pages/           # Páginas da aplicação
-│   │   ├── 📂 services/        # Serviços de API
-│   │   └── 📂 types/           # Tipos TypeScript
+├── app/                    # Frontend React
+│   ├── src/
+│   │   ├── components/      # Componentes reutilizáveis
+│   │   ├── contexts/        # Contextos React
+│   │   ├── hooks/           # Hooks personalizados
+│   │   ├── lib/             # Utilitários do frontend
+│   │   ├── pages/           # Páginas da aplicação
+│   │   ├── services/        # Serviços de API
+│   │   └── types/           # Tipos TypeScript
 │   └── package.json
-├── 📄 docker-compose.yml       # Orquestração Docker
-├── 📄 README.md                # Este arquivo
-└── 📄 .env.example             # Variáveis de ambiente exemplo
-```
+├── docker-compose.yml       # Orquestração Docker
+├── README.md                # Este arquivo
+├── .env.example             # Variáveis de ambiente exemplo
 
-## 🌐 API Endpoints
+
+## API Endpoints
 
 ### Produtos
 - `GET /products/read/all` - Listar todos os produtos
@@ -143,7 +142,7 @@ inventory-control/
 - `GET /users/me` - Obter perfil do usuário atual
 - `POST /users/change-password` - Alterar senha
 
-## 🎮 Interface do Usuário
+## Interface do Usuário
 
 ### Páginas Principais
 
@@ -176,46 +175,85 @@ inventory-control/
    - **Edição de armazéns existentes**
    - Estatísticas de produtos por armazém
 
-6. **Categorias** (`/categorias`) ⭐ **NOVO**
+6. **Categorias** (`/categorias`) **NOVO**
    - **CRUD completo de categorias**
    - Organização de produtos
    - Proteção contra exclusão com produtos associados
 
 ### Recursos da Interface
 
-- **🎨 Design Responsivo**: Funciona em desktop e mobile
-- **🌙 Modo Escuro**: Proteção para os olhos (planejado)
-- **🔍 Busca Instantânea**: Encontre produtos rapidamente
-- **📊 Status Visual**: Indicadores de estoque crítico/atenção/sucesso
-- **💾 Cache Inteligente**: Performance otimizada com React Query
-- **🔐 Autenticação Segura**: JWT com refresh tokens
-- **📱 Toast Notifications**: Feedback visual de ações
+- **Design Responsivo**: Funciona em desktop e mobile
+- **Modo Escuro**: Proteção para os olhos (planejado)
+- **Busca Instantânea**: Encontre produtos rapidamente
+- **Status Visual**: Indicadores de estoque crítico/atenção/sucesso
+- **Cache Inteligente**: Performance otimizada com React Query
+- **Autenticação Segura**: Sistema de login seguro
+- **Toast Notifications**: Feedback visual de ações
 
-## 🔧 Configuração
+## Configuração
 
-### Variáveis de Ambiente (Backend)
+### Variáveis de Ambiente
+Copie o arquivo `.env.example` para `.env` e configure as seguintes variáveis:
+
 ```bash
-# Database
+# ============================================
+# CONFIGURAÇÃO DO BANCO DE DADOS
+# ============================================
+DB_ROOT_PASSWORD=rootpassword
+DB_DATABASE=controle_estoque_db
+DB_USER=controle_estoque_user
+DB_PASSWORD=controle_estoque_pass
 DB_HOST=mysql
 DB_PORT=3306
-DB_DATABASE=inventory_db
-DB_USER=inventory_user
-DB_PASSWORD=your_password
-DB_ROOT_PASSWORD=root_password
+
+# ============================================
+# CONFIGURAÇÃO DE PORTAS
+# ============================================
+DB_PORT_EXTERNAL=3306          # Porta do MySQL no seu computador
+DB_PORT_INTERNAL=3306          # Porta do MySQL no container Docker
+API_PORT=5001                  # Porta da API
+FRONTEND_PORT=3000             # Porta do Frontend
+FRONTEND_INTERNAL_PORT=8080    # Porta do Frontend no container
+
+# ============================================
+# CONFIGURAÇÃO DO AMBIENTE FLASK
+# ============================================
+FLASK_ENV=development
+FLASK_DEBUG=1
 ```
 
-### Portas Padrão
-- **Frontend (Vite)**: 3000
-- **Backend (Flask)**: 5001
+### Portas Padrão (configuráveis via .env)
+- **Frontend**: 3000
+- **Backend API**: 5001
 - **MySQL**: 3306
 
-## 🧪 Gerenciamento e Testes via Docker
+*Todas as portas podem ser personalizadas através das variáveis de ambiente no arquivo `.env`*
+
+## Gerenciamento e Testes via Docker
 
 ### Comandos Docker Úteis
-```bash
-# Iniciar todos os serviços
-docker-compose up -d
 
+#### Construção e Inicialização
+```bash
+# Construir e iniciar todos os serviços
+docker-compose up -d --build
+
+# Construir apenas as imagens
+docker-compose build
+
+# Construir imagem específica
+docker-compose build api
+docker-compose build frontend
+
+# Reconstruir sem cache
+docker-compose build --no-cache
+
+# Iniciar serviços (sem reconstruir)
+docker-compose up -d
+```
+
+#### Gerenciamento de Serviços
+```bash
 # Verificar status dos serviços
 docker-compose ps
 
@@ -225,15 +263,39 @@ docker-compose logs -f
 # Logs de serviço específico
 docker-compose logs -f api
 docker-compose logs -f frontend
+docker-compose logs -f mysql
 
-# Reiniciar serviços
+# Reiniciar serviços específicos
+docker-compose restart api
+docker-compose restart frontend
+
+# Reiniciar todos os serviços
 docker-compose restart
 
 # Parar todos os serviços
 docker-compose down
 
-# Remover volumes (cuidado - apaga dados)
+# Parar e remover volumes (cuidado - apaga dados)
 docker-compose down -v
+
+# Remover imagens e containers não utilizados
+docker system prune -f
+```
+
+#### Desenvolvimento
+```bash
+# Reconstruir e iniciar serviço específico
+docker-compose up -d --build api
+
+# Visualizar logs com mais detalhes
+docker-compose logs -f --tail=100 api
+
+# Executar comandos dentro do container
+docker-compose exec api bash
+docker-compose exec mysql mysql -u root -p
+
+# Atualizar serviço sem perder dados
+docker-compose up -d --force-recreate api
 ```
 
 ### Testes e Verificação
@@ -249,48 +311,38 @@ curl http://localhost:5001/warehouses/read/all
 docker-compose logs api | grep ERROR
 ```
 
-## 📊 Funcionalidades Implementadas
+## Funcionalidades Implementadas
 
-### ✅ CRUD Completo
+### CRUD Completo
 - **Produtos**: Criar, Ler, Atualizar, Excluir
 - **Armazéns**: Criar, Ler, Atualizar, Excluir
 - **Categorias**: Criar, Ler, Atualizar, Excluir
 - **Movimentações**: Criar, Ler, **Excluir** (hard delete)
 - **Usuários**: Ler, Atualizar (soft delete)
 
-### ✅ Validações e Regras de Negócio
+### Validações e Regras de Negócio
 - **Integridade Referencial**: Não permite excluir categorias/armazéns com produtos
 - **Estoque Mínimo**: Alertas visuais para produtos críticos
 - **Validação de Dados**: Campos obrigatórios e formatos válidos
 - **Soft Delete**: Exclusão lógica para dados importantes
 
-### ✅ Performance e UX
+### Performance e UX
 - **Cache React Query**: Dados cacheados inteligentemente
 - **Invalidação Automática**: Updates em tempo real
 - **Loading States**: Feedback visual durante operações
 - **Error Handling**: Tratamento elegante de erros
 
-## 🔐 Segurança
+## Segurança
 
 - **bcrypt**: Hash de senhas com salt
 - **CORS**: Configuração segura para frontend
 - **Input Validation**: Validação no backend e frontend
 - **SQL Injection Protection**: SQLAlchemy ORM seguro
 
-## 👥 Autores
+## Autores
 
-- **Seu Nome** - *Desenvolvedor Principal* - [Migguell](https://github.com/Migguell)
-
-## 🙏 Agradecimentos
-
-- [React](https://reactjs.org/) - Framework frontend
-- [Flask](https://flask.palletsprojects.com/) - Framework backend
-- [Tailwind CSS](https://tailwindcss.com/) - Framework CSS
-- [shadcn/ui](https://ui.shadcn.com/) - Componentes UI
-- [Lucide](https://lucide.dev/) - Icones
+- **Miguel Ilha** - *Desenvolvedor Full-Stack*
 
 ---
 
-**🎉 Obrigado por usar Inventory Control!**
-
-Se você gostou do projeto, por favor considere dar uma ⭐️ no GitHub!
+** Obrigado por usar ControleEstoque!**
