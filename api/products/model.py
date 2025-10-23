@@ -6,6 +6,37 @@ from typing import Dict, Optional, List
 from flask import current_app
 from sqlalchemy import ForeignKey, CheckConstraint
 from sqlalchemy.orm import relationship
+from sqlalchemy import func, case
+
+def get_product_current_stock(product_id: str) -> float:
+    """Calculate current stock for a product by summing entries and subtracting exits"""
+    try:
+        from entries.model import Entry
+        from exits.model import Exit
+
+        # Sum all entry quantities
+        total_entries = db.session.query(func.sum(Entry.quantity))\
+            .filter(Entry.product_id == product_id)\
+            .scalar() or 0
+
+        # Sum all exit quantities
+        total_exits = db.session.query(func.sum(Exit.quantity))\
+            .filter(Exit.product_id == product_id)\
+            .scalar() or 0
+
+        return float(total_entries) - float(total_exits)
+    except Exception as e:
+        current_app.logger.error(f"Error calculating stock for product {product_id}: {str(e)}")
+        return 0.0
+
+def get_stock_status(current_stock: float, min_quantity: float) -> str:
+    """Determine stock status based on current stock and minimum quantity"""
+    if current_stock <= 0:
+        return "sem_estoque"
+    elif current_stock <= min_quantity:
+        return "estoque_baixo"
+    else:
+        return "estoque_suficiente"
 
 class Product(db.Model):
     __tablename__ = "products"
